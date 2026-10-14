@@ -1,0 +1,7 @@
+*
+!go.mod
+!go.sum
+!publisher/
+!publisher/main.go
+!consumer/
+!consumer/main.go
