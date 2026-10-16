@@ -3,5 +3,7 @@
 !go.sum
 !publisher/
 !publisher/main.go
+!publisher-confirms/
+!publisher-confirms/main.go
 !consumer/
 !consumer/main.go
