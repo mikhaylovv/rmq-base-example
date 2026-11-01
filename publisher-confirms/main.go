@@ -29,7 +29,15 @@ func main() {
 	}
 	defer ch.Close()
 
-	if err := ch.ExchangeDeclare("demo.topic", "topic", true, false, false, false, nil); err != nil {
+	if err := ch.ExchangeDeclare(
+		"demo.topic", // name
+		"topic",      // kind
+		true,         // durable
+		false,        // autoDelete
+		false,        // internal
+		false,        // noWait
+		nil,          // args
+	); err != nil {
 		log.Fatalf("declare exchange: %v", err)
 	}
 
@@ -55,11 +63,17 @@ func main() {
 			for i := 0; i < batchSize; i++ {
 				body := fmt.Sprintf("Hello RabbitMQ! #%d at %s", n, now.UTC().Format(time.RFC3339Nano))
 				tag := ch.GetNextPublishSeqNo()
-				err := ch.Publish("demo.topic", "demo.message", false, false, amqp.Publishing{
-					ContentType:  "text/plain",
-					DeliveryMode: amqp.Persistent,
-					Body:         []byte(body),
-				})
+				err := ch.Publish(
+					"demo.topic",   // exchange
+					"demo.message", // key
+					false,          // mandatory
+					false,          // immediate
+					amqp.Publishing{ // msg
+						ContentType:  "text/plain",
+						DeliveryMode: amqp.Persistent,
+						Body:         []byte(body),
+					},
+				)
 				if err != nil {
 					panic(fmt.Sprintf("publish tag=%d: %v", tag, err))
 				}

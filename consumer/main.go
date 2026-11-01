@@ -27,19 +27,48 @@ func main() {
 	}
 	defer ch.Close()
 
-	if err := ch.ExchangeDeclare("demo.topic", "topic", true, false, false, false, nil); err != nil {
+	if err := ch.ExchangeDeclare(
+		"demo.topic", // name
+		"topic",      // kind
+		true,         // durable
+		false,        // autoDelete
+		false,        // internal
+		false,        // noWait
+		nil,          // args
+	); err != nil {
 		log.Fatalf("declare exchange: %v", err)
 	}
 
-	q, err := ch.QueueDeclare("hello", true, false, false, false, nil)
+	q, err := ch.QueueDeclare(
+		"hello", // name
+		true,    // durable
+		false,   // autoDelete
+		false,   // exclusive
+		false,   // noWait
+		nil,     // args
+	)
 	if err != nil {
 		log.Fatalf("declare queue: %v", err)
 	}
-	if err := ch.QueueBind(q.Name, "demo.*", "demo.topic", false, nil); err != nil {
+	if err := ch.QueueBind(
+		q.Name,       // name
+		"demo.*",     // key
+		"demo.topic", // exchange
+		false,        // noWait
+		nil,          // args
+	); err != nil {
 		log.Fatalf("bind queue: %v", err)
 	}
 
-	messages, err := ch.Consume(q.Name, "", false, false, false, false, nil)
+	messages, err := ch.Consume(
+		q.Name, // queue
+		"",     // consumer
+		false,  // autoAck
+		false,  // exclusive
+		false,  // noLocal
+		false,  // noWait
+		nil,    // args
+	)
 	if err != nil {
 		log.Fatalf("consume: %v", err)
 	}
