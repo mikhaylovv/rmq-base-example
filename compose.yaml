@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:5672:5672"
       - "127.0.0.1:15672:15672"
     volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
+      - ./rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
       interval: 5s
@@ -49,6 +49,3 @@ services:
       rabbitmq:
         condition: service_healthy
     restart: on-failure
-
-volumes:
-  rabbitmq-data:
