@@ -32,13 +32,6 @@ func main() {
 	if err := ch.ExchangeDeclare("demo.topic", "topic", true, false, false, false, nil); err != nil {
 		log.Fatalf("declare exchange: %v", err)
 	}
-	q, err := ch.QueueDeclare("hello", true, false, false, false, nil)
-	if err != nil {
-		log.Fatalf("declare queue: %v", err)
-	}
-	if err := ch.QueueBind(q.Name, "demo.*", "demo.topic", false, nil); err != nil {
-		log.Fatalf("bind queue: %v", err)
-	}
 
 	if err := ch.Confirm(false); err != nil {
 		log.Fatalf("enable publisher confirms: %v", err)
