@@ -12,10 +12,10 @@ publisher → exchange demo.topic (topic) → binding demo.* → очередь 
 ## Быстрый запуск
 
 Нужен работающий Docker с Docker Compose. Локальный Go не требуется.
-Из корня репозитория:
+Из корня репозитория, с обычным паблишером:
 
 ```sh
-docker compose up --build
+docker compose --profile basic up --build
 ```
 
 Команда собирает и запускает RabbitMQ, паблишер и консьюмер.
@@ -24,12 +24,22 @@ docker compose up --build
 и профиль `confirms`:
 
 ```sh
-docker compose --profile confirms up --build consumer publisher-confirms
+docker compose --profile confirms up --build
 ```
 
-Если обычный паблишер уже работает, сначала остановите его:
-`docker compose stop publisher`. Указывайте сервисы в команде выше: запуск
-только с `--profile confirms` поднимет оба паблишера.
+Те же команды через Makefile (нужен `make`):
+
+```sh
+make basic
+make confirms
+make cleanup
+```
+
+Каждый профиль запускает RabbitMQ, консьюмер и выбранный паблишер.
+Без профиля запускаются только RabbitMQ и консьюмер.
+Перед переключением между уже запущенными вариантами остановите предыдущий запуск:
+`make cleanup` (или `docker compose --profile basic --profile confirms down`).
+Команда удаляет контейнеры и сеть обоих профилей, сохраняя том с данными RabbitMQ.
 
 Этот вариант раз в секунду отправляет батч из трёх сообщений без ожидания
 между отправками, затем ждёт Ack всех трёх. Следующий батч отправляется после
