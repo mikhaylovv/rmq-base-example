@@ -1,4 +1,4 @@
-.PHONY: basic confirms cleanup
+.PHONY: basic confirms publisher clean
 
 basic:
 	docker compose --profile basic up --build
@@ -6,5 +6,8 @@ basic:
 confirms:
 	docker compose --profile confirms up --build
 
-cleanup:
-	docker compose --profile basic --profile confirms down
+publisher:
+	docker compose --profile publisher up --build
+
+clean:
+	docker compose --profile basic --profile confirms --profile publisher down

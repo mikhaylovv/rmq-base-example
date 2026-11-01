@@ -27,21 +27,29 @@ docker compose --profile basic up --build
 docker compose --profile confirms up --build
 ```
 
+Только RabbitMQ и обычный паблишер, без консьюмера — профиль `publisher`:
+
+```sh
+docker compose --profile publisher up --build
+```
+
 Те же команды через Makefile (нужен `make`):
 
 ```sh
 make basic
 make confirms
-make cleanup
+make publisher
+make clean
 ```
 
-Каждый профиль запускает RabbitMQ, консьюмер и выбранный паблишер.
-Без профиля запускаются только RabbitMQ и консьюмер.
+Профили `basic` и `confirms` запускают RabbitMQ, консьюмер и выбранный паблишер.
+Профиль `publisher` запускает только RabbitMQ и обычный паблишер.
+Без профиля запускается только RabbitMQ.
 Перед переключением между уже запущенными вариантами остановите предыдущий запуск:
-`make cleanup` (или `docker compose --profile basic --profile confirms down`).
-Команда удаляет контейнеры и сеть обоих профилей, сохраняя том с данными RabbitMQ.
+`make clean` (или `docker compose --profile basic --profile confirms --profile publisher down`).
+Команда удаляет контейнеры и сеть всех трёх профилей, сохраняя том с данными RabbitMQ.
 
-Этот вариант раз в секунду отправляет батч из трёх сообщений без ожидания
+Вариант `confirms` раз в секунду отправляет батч из трёх сообщений без ожидания
 между отправками, затем ждёт Ack всех трёх. Следующий батч отправляется после
 полного подтверждения предыдущего и тика таймера. При Nack, закрытии канала
 или таймауте 10 секунд на весь батч — `panic`, без повторной отправки

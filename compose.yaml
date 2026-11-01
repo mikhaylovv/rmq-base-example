@@ -18,7 +18,7 @@ services:
       start_period: 20s
 
   publisher:
-    profiles: ["basic"]
+    profiles: ["basic", "publisher"]
     build:
       context: .
       target: publisher
@@ -40,6 +40,7 @@ services:
     stop_grace_period: 15s
 
   consumer:
+    profiles: ["basic", "confirms"]
     build:
       context: .
       target: consumer
